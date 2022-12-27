@@ -1,20 +1,16 @@
-export const ship = function(shipCoordinates) {
-    let cordsHit = [];
+export const ship = function(length) {
 
-    function hit(cord) {
-        if (cordsHit.includes(cord))
-            return ;
-        
-        if (shipCoordinates.includes(cord))
-            cordsHit.push(cord); 
+    let hitCount = 0;
+    function hit() {
+        ++hitCount;
     }
 
     function isSunk() {
-        return (cordsHit.length >= shipCoordinates.length);
+        return (hitCount >= length);
     }
 
     function getHitCount() {
-        return cordsHit.length;
+        return hitCount;
     }
 
     return {
