@@ -6,25 +6,31 @@ beforeEach(() => {
 });
 
 test("whether gameboard can place ships horizontally", () => {
-    testGameboard.placeShip(12, 3, true);
-    expect(testGameboard.hasShip(12, 3, true)).toBe(true);
+    testGameboard.placeShip([2, 3], 3, true);
+    expect(testGameboard.hasShip([2, 3], 3, true)).toBe(true);
 });
 
 test("whether gameboard can place ships vertically", () => {
-    testGameboard.placeShip(12, 2, false);
-    expect(testGameboard.hasShip(12, 2, false)).toBe(true);
+    testGameboard.placeShip([2, 3], 2, false);
+    expect(testGameboard.hasShip([2, 3], 2, false)).toBe(true);
 });
 
 it("doesn't place a ship which would intersect with existing ones", () => {
-    testGameboard.placeShip(12, 5, true);
-    testGameboard.placeShip(12, 5, false);
+    testGameboard.placeShip([5, 5], 3, true);
+    testGameboard.placeShip([5, 5], 4, false);
 
-    expect(testGameboard.hasShip(12, 5, true)).toBe(true);
-    expect(testGameboard.hasShip(12, 5, false)).toBe(false);
+    expect(testGameboard.hasShip([5, 5], 3, true)).toBe(true);
+    expect(testGameboard.hasShip([5, 5], 4, false)).toBe(false);
 });
 
 it("doesn't place ship out of board", () => {
-    testGameboard.placeShip(9, 4, true);
-    expect(testGameboard.hasShip(9, 4, true)).toBe(false);
+    testGameboard.placeShip([8, 0], 4, true);
+    expect(testGameboard.hasShip([8, 0], 4, true)).toBe(false);
+});
+
+
+it("registers a hit", () => {
+    testGameboard.receiveAttack([4, 2]);
+    expect(testGameboard.hasBeenAttacked([4, 2])).toBe(true);
 });
 
