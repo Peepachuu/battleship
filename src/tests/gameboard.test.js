@@ -1,33 +1,43 @@
 import {gameboard} from "../gameboard";
 
 let testGameboard;
+let board;
+
 beforeEach(() => {
     testGameboard = gameboard();
+    board = [];
+    for (let x = 0; x < 10; ++x) {
+        let row = [];
+        for (let y = 0; y < 10; ++y) {
+            row.push({containsShip: -1, beenHit: false});
+        }
+        board.push(row);
+    }
 });
 
-test("whether gameboard can place ships horizontally", () => {
+it("can place ships horizontally", () => {
     testGameboard.placeShip([2, 3], 3, true);
-    expect(testGameboard.hasShip([2, 3], 3, true)).toBe(true);
+    board[2][3].containsShip = 0;
+    board[2][4].containsShip = 0;
+    board[2][5].containsShip = 0;
+    expect(testGameboard.getBoard()).toEqual(board);
 });
 
-test("whether gameboard can place ships vertically", () => {
+it("can place ships vertically", () => {
     testGameboard.placeShip([2, 3], 2, false);
-    expect(testGameboard.hasShip([2, 3], 2, false)).toBe(true);
+    board[2][3].containsShip = 0;
+    board[3][3].containsShip = 0;
+    expect(testGameboard.getBoard()).toEqual(board);
 });
 
-it("doesn't place a ship which would intersect with existing ones", () => {
+it("rejects intersecting ship positions", () => {
     testGameboard.placeShip([5, 5], 3, true);
-    testGameboard.placeShip([5, 5], 4, false);
-
-    expect(testGameboard.hasShip([5, 5], 3, true)).toBe(true);
-    expect(testGameboard.hasShip([5, 5], 4, false)).toBe(false);
+    expect(testGameboard.willCollide([5, 5], 3, false)).toEqual(true);
 });
 
-it("doesn't place ship out of board", () => {
-    testGameboard.placeShip([8, 0], 4, true);
-    expect(testGameboard.hasShip([8, 0], 4, true)).toBe(false);
+it("rejects placement that are out of bounds", () => {
+    expect(testGameboard.isOutOfBounds([8, 8], 4, true)).toEqual(true);
 });
-
 
 it("registers a hit", () => {
     testGameboard.receiveAttack([4, 2]);
