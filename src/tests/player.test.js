@@ -9,7 +9,7 @@ beforeEach(() => {
 
 it("can be attacked", () => {
     enemyPlayer.attack([5, 3], testPlayer);
-    expect(testPlayer.gameboard.hasBeenAttacked([5, 3])).toBe(true);
+    expect(testPlayer.ownGameboard.hasBeenAttacked([5, 3])).toBe(true);
 });
 
 it("can make random attacks", () => {
@@ -17,7 +17,7 @@ it("can make random attacks", () => {
     let cordsHit = 0;
     for (let x = 0; x < 10; ++x) {
         for (let y = 0; y < 10; ++y) {
-            if (testPlayer.gameboard.hasBeenAttacked([x, y]))
+            if (testPlayer.ownGameboard.hasBeenAttacked([x, y]))
                 ++cordsHit;
         } 
     }
