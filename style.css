@@ -1,0 +1,25 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.main {
+    display: flex;
+    justify-content: space-around;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+.board-row {
+    display: flex;
+}
+
+.board-square {
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+}
