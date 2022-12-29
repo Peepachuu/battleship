@@ -61,6 +61,14 @@ export const gameboard = function() {
         return false;
     }
 
+    function allShipsSunk() {
+        for (const shipToCheck of ships) {
+            if (!shipToCheck.isSunk())
+                return false;
+        }
+        return true;
+    }
+
     return {
         placeShip,
         receiveAttack,
