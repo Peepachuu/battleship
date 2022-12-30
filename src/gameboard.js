@@ -35,6 +35,10 @@ export const gameboard = function() {
         return (board[coordinate[0]][coordinate[1]].beenHit);
     }
 
+    function hasShip(coordinate) {
+        return (board[coordinate[0]][coordinate[1]].containsShip);
+    }
+
     function getBoard() {
         return board;
     }
@@ -75,6 +79,7 @@ export const gameboard = function() {
         hasBeenAttacked,
         getBoard,
         isOutOfBounds,
-        willCollide
+        willCollide,
+        hasShip
     }
 }
