@@ -3,9 +3,40 @@
     margin: 0px;
 }
 
+:root {
+    --main-background-color: rgb(221, 221, 221);
+    --ship-square-color: rgb(68, 68, 68);
+    --empty-square-color: rgb(133, 255, 179);;
+    --hit-ship-square-color: rgb(255, 133, 133);;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--main-background-color);
+}
+
+header {
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+footer {
+    padding: 16px 0px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
 .main {
+    flex: 1;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .board {
