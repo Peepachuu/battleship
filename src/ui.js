@@ -38,11 +38,13 @@ function createHeader() {
 function createMainContent() {
     const mainContent = document.createElement("section");
     mainContent.classList.add("main");
+
     let userBoard = createInitialBoard();
     let enemyBoard = createInitialBoard();
-    renderBoard(game.getEnemy().ownGameboard, enemyBoard);
-    mainContent.append(userBoard, enemyBoard);
+    enemyBoard.classList.add("enemy");
+    makeAttackable(enemyBoard, userBoard);
 
+    mainContent.append(userBoard, enemyBoard);
     return mainContent;
 }
 
@@ -57,7 +59,6 @@ function createInitialBoard() {
         for (let y = 0; y < 10; ++y) {
             let square = document.createElement("div");
             square.classList.add("board-square");
-            //TODO Make it so that clicking the enemy board's square attacks it
             boardRow.appendChild(square);
         }
         board.appendChild(boardRow);
@@ -66,19 +67,34 @@ function createInitialBoard() {
 }
 
 function renderBoard(boardToRender, boardOnScreen) {
+    const rootStyles = getComputedStyle(document.documentElement);
     const boardOnScreenRows = boardOnScreen.childNodes;
     for (let x = 0; x < 10; ++x) {
         const boardSquares = boardOnScreenRows[x].childNodes;
         for (let y = 0; y < 10; ++y) {
             if (boardToRender.hasShip([x, y]) != -1) {
                 if (boardToRender.hasBeenAttacked([x, y]))
-                    boardSquares[y].style.backgroundColor = "red";
+                    boardSquares[y].style.backgroundColor = rootStyles.getPropertyValue("--hit-ship-square-color");
                 else
-                    boardSquares[y].style.backgroundColor = "grey";
+                    boardSquares[y].style.backgroundColor = rootStyles.getPropertyValue("--ship-square-color");
             } else {
                 if (boardToRender.hasBeenAttacked([x, y]))
-                    boardSquares[y].style.backgroundColor = "green";
+                    boardSquares[y].style.backgroundColor = rootStyles.getPropertyValue("--empty-square-color");
             }
+        }
+    }
+}
+
+function makeAttackable(enemyBoard, userBoard) {
+    const enemyBoardRows = enemyBoard.childNodes;
+    for (let x = 0; x < 10; ++x) {
+        const boardSquares = enemyBoardRows[x].childNodes;
+        for (let y = 0; y < 10; ++y) {
+            boardSquares[y].addEventListener('click', () => {
+                game.playRound([x, y]);
+                renderBoard(game.getEnemy().ownGameboard, enemyBoard);
+                renderBoard(game.getUser().ownGameboard, userBoard);
+            });
         }
     }
 }
