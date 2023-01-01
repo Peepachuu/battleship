@@ -19,9 +19,14 @@ export const game = function() {
         return enemy;
     }
 
+    function hasGameFinished() {
+        return (user.ownGameboard.allShipsSunk() || enemy.ownGameboard.allShipsSunk());
+    }
+
     return {
         playRound,
         getEnemy,
-        getUser
+        getUser,
+        hasGameFinished
     }
 }();

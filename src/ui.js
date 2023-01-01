@@ -4,11 +4,15 @@ export function loadUI() {
     const header = createHeader();
     const mainContent = createMainContent();
     const footer = createFooter();
+    const overlay = createShipPlacementPopUp();
 
-    document.body.append(header, mainContent, footer);
+    document.body.append(header, mainContent, footer, overlay);
 }
 
 function createShipPlacementPopUp() {
+    const background = document.createElement("div");
+    background.classList.add("overlay");
+
     const popUp = document.createElement("div");
     popUp.classList.add("popUp");
 
@@ -19,11 +23,40 @@ function createShipPlacementPopUp() {
     info.textContent = "Place your ships";
 
     const rotateButton = document.createElement("button");
+    rotateButton.addEventListener('click', () => {
+        isHorizontal = !isHorizontal;
+    });
     rotateButton.textContent = "Rotate";
 
-    popUp.append(heading, info, rotateButton);
+    const userBoard = createInitialBoard();
+    userBoard.classList.add("interactible");
+    let isHorizontal = true;
+    let length = 5;
 
-    return popUp;
+    const boardRows = userBoard.childNodes;
+    const board = game.getUser().ownGameboard;
+    for (let x = 0; x < 10; ++x) {
+        const boardSquares = boardRows[x].childNodes;
+        for (let y = 0; y < 10; ++y) {
+            boardSquares[y].addEventListener('click', () => {
+                if (board.isOutOfBounds([x, y], length, isHorizontal) || board.willCollide([x, y], length, isHorizontal))
+                    return ;
+                board.placeShip([x, y], length--, isHorizontal);
+                renderBoard(board, userBoard);
+
+                if (length == 1) {
+                    const boardOnScreen = document.querySelector(".user");
+                    renderBoard(board, boardOnScreen);
+                    background.remove();
+                }
+            });
+        }
+    }
+
+    popUp.append(heading, info, rotateButton, userBoard);
+    background.appendChild(popUp);
+
+    return background;
 }
 
 function createHeader() {
@@ -41,7 +74,8 @@ function createMainContent() {
 
     let userBoard = createInitialBoard();
     let enemyBoard = createInitialBoard();
-    enemyBoard.classList.add("enemy");
+    enemyBoard.classList.add("interactible");
+    userBoard.classList.add("user");
     makeAttackable(enemyBoard, userBoard);
 
     mainContent.append(userBoard, enemyBoard);
@@ -107,3 +141,9 @@ function createFooter() {
     footer.appendChild(authorNote);
     return footer;
 }
+
+function createGameEndingPopUp() {
+
+}
+//TODO Make the user able to place ships in their board
+//TODO Create a pop up when the game ends

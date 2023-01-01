@@ -45,9 +45,9 @@ export const gameboard = function() {
 
     function isOutOfBounds(start, length, isHorizontal) {
         if (isHorizontal) {
-            return start[1] + length > 9;
+            return start[1] + length - 1 > 9;
         }
-        return start[0] + length > 9;
+        return start[0] + length - 1> 9;
     }
 
     function willCollide(start, length, isHorizontal) {
@@ -80,6 +80,7 @@ export const gameboard = function() {
         getBoard,
         isOutOfBounds,
         willCollide,
-        hasShip
+        hasShip,
+        allShipsSunk
     }
 }
