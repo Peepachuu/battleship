@@ -109,7 +109,7 @@ function renderBoard(boardToRender, boardOnScreen) {
             if (boardToRender.hasShip([x, y]) != -1) {
                 if (boardToRender.hasBeenAttacked([x, y]))
                     boardSquares[y].style.backgroundColor = rootStyles.getPropertyValue("--hit-ship-square-color");
-                else
+                else if (boardToRender == game.getUser().ownGameboard)
                     boardSquares[y].style.backgroundColor = rootStyles.getPropertyValue("--ship-square-color");
             } else {
                 if (boardToRender.hasBeenAttacked([x, y]))
