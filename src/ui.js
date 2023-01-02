@@ -120,6 +120,7 @@ function renderBoard(boardToRender, boardOnScreen) {
 }
 
 function makeAttackable(enemyBoard, userBoard) {
+    game.getEnemy().placeShipsRandomly();
     const enemyBoardRows = enemyBoard.childNodes;
     for (let x = 0; x < 10; ++x) {
         const boardSquares = enemyBoardRows[x].childNodes;

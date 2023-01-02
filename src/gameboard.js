@@ -73,6 +73,10 @@ export const gameboard = function() {
         return true;
     }
 
+    function shipCount() {
+        return ships.length;
+    }
+
     return {
         placeShip,
         receiveAttack,
@@ -81,6 +85,7 @@ export const gameboard = function() {
         isOutOfBounds,
         willCollide,
         hasShip,
-        allShipsSunk
+        allShipsSunk,
+        shipCount
     }
 }
