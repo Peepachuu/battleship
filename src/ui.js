@@ -4,12 +4,12 @@ export function loadUI() {
     const header = createHeader();
     const mainContent = createMainContent();
     const footer = createFooter();
-    const overlay = createShipPlacementPopUp();
 
-    document.body.append(header, mainContent, footer, overlay);
+    document.body.append(header, mainContent, footer);
+    loadShipPlacementPopUp();
 }
 
-function createShipPlacementPopUp() {
+function loadShipPlacementPopUp() {
     const background = document.createElement("div");
     background.classList.add("overlay");
 
@@ -53,10 +53,12 @@ function createShipPlacementPopUp() {
         }
     }
 
+    game.getEnemy().placeShipsRandomly();
+
     popUp.append(heading, info, rotateButton, userBoard);
     background.appendChild(popUp);
 
-    return background;
+    document.body.appendChild(background);
 }
 
 function createHeader() {
@@ -75,6 +77,7 @@ function createMainContent() {
     let userBoard = createInitialBoard();
     let enemyBoard = createInitialBoard();
     enemyBoard.classList.add("interactible");
+    enemyBoard.classList.add("enemy");
     userBoard.classList.add("user");
     makeAttackable(enemyBoard, userBoard);
 
@@ -120,7 +123,6 @@ function renderBoard(boardToRender, boardOnScreen) {
 }
 
 function makeAttackable(enemyBoard, userBoard) {
-    game.getEnemy().placeShipsRandomly();
     const enemyBoardRows = enemyBoard.childNodes;
     for (let x = 0; x < 10; ++x) {
         const boardSquares = enemyBoardRows[x].childNodes;
@@ -129,6 +131,9 @@ function makeAttackable(enemyBoard, userBoard) {
                 game.playRound([x, y]);
                 renderBoard(game.getEnemy().ownGameboard, enemyBoard);
                 renderBoard(game.getUser().ownGameboard, userBoard);
+
+                if (game.hasGameFinished())
+                    loadGameEndingPopUp();
             });
         }
     }
@@ -143,8 +148,35 @@ function createFooter() {
     return footer;
 }
 
-function createGameEndingPopUp() {
+function loadGameEndingPopUp() {
+    const background = document.createElement("div");
+    background.classList.add("overlay");
 
+    const popUp = document.createElement("div");
+    popUp.classList.add("popUp");
+
+    const heading = document.createElement("h2");
+    heading.textContent = game.getUser().ownGameboard.allShipsSunk() ? "You lost" : "You won";
+
+    const playAgain = document.createElement("button");
+    playAgain.textContent = "Play again";
+    playAgain.addEventListener("click", () => {
+        game.restartGame();
+        resetBoardAppearance(document.querySelector(".user"));
+        resetBoardAppearance(document.querySelector(".enemy"));
+        background.remove();
+        loadShipPlacementPopUp();
+    });
+
+    popUp.append(heading, playAgain);
+    background.appendChild(popUp);
+    document.body.appendChild(background);
 }
-//TODO Make the user able to place ships in their board
-//TODO Create a pop up when the game ends
+
+function resetBoardAppearance(boardToReset) {
+    for (let x = 0; x < 10; ++x) {
+        for (let y = 0; y < 10; ++y) {
+            boardToReset.childNodes[x].childNodes[y].style.removeProperty("background-color");
+        }
+    }
+}

@@ -23,10 +23,16 @@ export const game = function() {
         return (user.ownGameboard.allShipsSunk() || enemy.ownGameboard.allShipsSunk());
     }
 
+    function restartGame() {
+        user.ownGameboard.resetBoard();
+        enemy.ownGameboard.resetBoard();
+    }
+
     return {
         playRound,
         getEnemy,
         getUser,
-        hasGameFinished
+        hasGameFinished,
+        restartGame
     }
 }();

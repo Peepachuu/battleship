@@ -29,6 +29,9 @@ export const gameboard = function() {
     
     function receiveAttack(coordinate) {
         board[coordinate[0]][coordinate[1]].beenHit = true;
+        if (board[coordinate[0]][coordinate[1]].containsShip != -1) {
+            ships[board[coordinate[0]][coordinate[1]].containsShip].hit();
+        }
     }
 
     function hasBeenAttacked(coordinate) {
@@ -66,8 +69,8 @@ export const gameboard = function() {
     }
 
     function allShipsSunk() {
-        for (const shipToCheck of ships) {
-            if (!shipToCheck.isSunk())
+        for (let i = 0; i < ships.length; ++i) {
+            if (!ships[i].isSunk())
                 return false;
         }
         return true;
@@ -76,6 +79,17 @@ export const gameboard = function() {
     function shipCount() {
         return ships.length;
     }
+
+    function resetBoard() {
+        for (let x = 0; x < 10; ++x) {
+            for (let y = 0; y < 10; ++y) {
+               board[x][y].containsShip = -1;
+               board[x][y].beenHit = false;
+            }
+        }
+        ships.length = 0;
+    }
+
 
     return {
         placeShip,
@@ -86,6 +100,7 @@ export const gameboard = function() {
         willCollide,
         hasShip,
         allShipsSunk,
-        shipCount
+        shipCount,
+        resetBoard
     }
 }
