@@ -1,4 +1,5 @@
 import {game} from "./game";
+import { ship } from "./ship";
 
 export function loadUI() {
     const header = createHeader();
@@ -31,7 +32,8 @@ function loadShipPlacementPopUp() {
     const userBoard = createInitialBoard();
     userBoard.classList.add("interactible");
     let isHorizontal = true;
-    let length = 5;
+    let current = 0;
+    const shipLengths = [5, 4, 3, 3, 2];
 
     const boardRows = userBoard.childNodes;
     const board = game.getUser().ownGameboard;
@@ -39,12 +41,12 @@ function loadShipPlacementPopUp() {
         const boardSquares = boardRows[x].childNodes;
         for (let y = 0; y < 10; ++y) {
             boardSquares[y].addEventListener('click', () => {
-                if (board.isOutOfBounds([x, y], length, isHorizontal) || board.willCollide([x, y], length, isHorizontal))
+                if (board.isOutOfBounds([x, y], shipLengths[current], isHorizontal) || board.willCollide([x, y], shipLengths[current], isHorizontal))
                     return ;
-                board.placeShip([x, y], length--, isHorizontal);
+                board.placeShip([x, y], shipLengths[current], isHorizontal);
                 renderBoard(board, userBoard);
 
-                if (length == 1) {
+                if (current++ == 4) {
                     const boardOnScreen = document.querySelector(".user");
                     renderBoard(board, boardOnScreen);
                     background.remove();
